@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: service-gateway
+  cloud:
+    consul:
+      host: 139.196.6.197
+      port: 8500
+      discovery:
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 10s
+        instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+        register: true
+        prefer-ip-address: true
+        register-health-check: false #注册不检查心跳,开发时用
+      config:
+        format: YAML
+
+    gateway:
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+          enabled: true
+
+      routes:
+      - id: api-a
+        uri: lb://service-ribbon
+        predicates:
+        - Path=/api-a/**
+        filters:
+        - StripPrefix=1
+      - id: api-b
+        uri: lb://service-feign
+        predicates:
+        - Path=/api-b/**
+        filters:
+        - StripPrefix=1
+
+server:
+  port: 6640

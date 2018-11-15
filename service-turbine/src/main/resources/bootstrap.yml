@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: service-turbine
+  cloud:
+    consul:
+      host: 139.196.6.197
+      #      host: consul  生产环境高可用
+      port: 8500
+      discovery:
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 10s
+        instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+        register: true
+        prefer-ip-address: true
+        register-health-check: false #注册不检查心跳,开发时用
+      config:
+        format: YAML
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      cors:
+        allowed-origins: "*"
+        allowed-methods: "*"
+
+turbine:
+  app-config: service-hi,service-hi2-turbine
+  aggregator:
+    clusterConfig: default
+  clusterNameExpression: new String("default")
+  instanceUrlSuffix:
+    default: actuator/hystrix.stream
+
+server:
+  port: 8779

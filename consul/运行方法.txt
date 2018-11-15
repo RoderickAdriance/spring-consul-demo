@@ -1,0 +1,34 @@
+
+//启动命令:  在cmd 或者bash 中运行，不能双击运行
+windows:
+./consul.exe agent -dev -ui -data-dir=data -config-dir=config -node=local 
+
+Linux:
+consul agent -server -bind=10.0.xx.55 -client=0.0.0.0 -bootstrap-expect=3 -data-dir=/data -node=server1
+
+
+
+
+//参数
+-bootstrap-expect:集群期望的节点数，只有节点数量达到这个值才会选举leader。
+
+-server： 运行在server模式
+
+-data-dir：指定数据目录，其他的节点对于这个目录必须有读的权限
+
+-node：指定节点的名称
+
+-bind：为该节点绑定一个地址
+
+-config-dir：指定配置文件，定义服务的，默认所有以.json结尾的文件都会读
+
+-enable-script-checks=true：设置检查服务为可用
+
+-datacenter: 数据中心没名称，
+
+-join：加入到已有的集群中
+
+
+
+删除无效的服务
+http://localhost:8500/v1/agent/service/deregister/paas-portal-sit-9003
